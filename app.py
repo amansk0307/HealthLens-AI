@@ -1320,7 +1320,7 @@ If a user describes a possible medical emergency, advise them to contact local
 emergency services immediately.
 Do not request personal identifiers.
 """
-CHATBOT_PROMPT_VERSION = "rag-2"
+CHATBOT_PROMPT_VERSION = "rag-3"
 
 # Disable Application Default Credentials (ADC) using environment variable
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ""
@@ -1334,7 +1334,7 @@ def get_chat_session():
     # model = genai.GenerativeModel(model_name)
     model = genai.GenerativeModel(
         model_name,
-        generation_config={"max_output_tokens": 512},
+        generation_config={"max_output_tokens": 1024},
         system_instruction=CHATBOT_SYSTEM_INSTRUCTION,
         )
     st.session_state.gemini_chat = model.start_chat(history=[])
