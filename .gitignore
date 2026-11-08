@@ -1,0 +1,9 @@
+*.zip
+.streamlit/secrets.toml
+*.zip
+.venv/
+__pycache__/
+.streamlit/secrets.toml
+*.zip
+.venv/
+__pycache__/

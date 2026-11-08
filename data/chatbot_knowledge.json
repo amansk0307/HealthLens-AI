@@ -1,0 +1,258 @@
+[
+  {
+    "id": "alzheimers-overview",
+    "title": "Alzheimer's disease overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/alzheimersdisease.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Alzheimer's disease is the most common form of dementia among older people. It affects memory, thinking, language, reasoning, and eventually everyday activities. It is not a normal part of aging, and changes usually develop gradually over time."
+  },
+  {
+    "id": "alzheimers-symptoms-diagnosis",
+    "title": "Alzheimer's symptoms and evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/alzheimersdisease.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Possible Alzheimer's symptoms include difficulty remembering recent events or familiar names, getting lost in familiar places, repeating questions, and difficulty speaking, reading, or writing. Other health conditions can cause memory changes. A health care provider evaluates medical history, thinking and memory, behavior, and possible alternative causes."
+  },
+  {
+    "id": "alzheimers-risk-and-evaluation",
+    "title": "Alzheimer's risk factors and medical evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/alzheimersdisease.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Age is the strongest known risk factor for Alzheimer's disease, and having a family member with the disease may raise risk, but family history is not always present. Noticeable memory or thinking changes should be discussed with a health care provider. Evaluation may include medical history and medicines, memory and thinking tests, questions about behavior, and checks for other medical or mental health causes. Alzheimer's is not a normal part of aging."
+  },
+  {
+    "id": "memory-forgetfulness-overview",
+    "title": "Forgetfulness and possible related conditions",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/memory.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Occasional forgetfulness can happen, but changes that interfere with daily activities may need medical evaluation. Forgetfulness can be associated with Alzheimer's disease or other dementias, stroke, depression, head injuries, blood clots or tumors in the brain, kidney, liver, or thyroid problems, and reactions to some medicines. A symptom alone cannot identify its cause."
+  },
+  {
+    "id": "memory-loss-causes",
+    "title": "Memory loss causes and evaluation",
+    "source_name": "MedlinePlus Medical Encyclopedia",
+    "source_url": "https://medlineplus.gov/ency/article/003257.htm",
+    "reviewed_on": "2026-11-08",
+    "text": "Memory loss can have many causes. These include dementia such as Alzheimer's disease, vascular dementia, Lewy body dementia, and frontotemporal dementia; depression and other mental health conditions; alcohol, drugs, or some medicines; brain infections; epilepsy; Parkinson's disease or multiple sclerosis; and low levels of vitamins such as B1 or B12. Evaluation depends on the person's history and symptoms, including when the changes began. A health care provider can assess possible causes."
+  },
+  {
+    "id": "diabetes-overview",
+    "title": "Diabetes overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/diabetes.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Diabetes is a condition in which blood glucose, or blood sugar, is too high. Insulin helps glucose move from the bloodstream into cells. Diabetes can occur when the body makes too little insulin, cannot use insulin effectively, or both. Common forms include type 1, type 2, and gestational diabetes."
+  },
+  {
+    "id": "diabetes-symptoms-tests",
+    "title": "Diabetes symptoms and testing",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/diabetes.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Possible diabetes symptoms include increased thirst and hunger, frequent urination, fatigue, blurry vision, tingling in the hands or feet, sores that do not heal, and unexplained weight loss. Symptoms vary and some people have mild or no noticeable symptoms. Health care providers use blood glucose tests, including the A1C test, to diagnose diabetes."
+  },
+  {
+    "id": "diabetes-types-diagnosis",
+    "title": "Diabetes types and diagnosis",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/diabetes.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Type 1 diabetes occurs when the body makes little or no insulin; type 2 diabetes occurs when the body does not make or use insulin effectively; and gestational diabetes develops during pregnancy. Symptoms and causes differ by type, and some people have few or no symptoms. A health care provider diagnoses diabetes using blood glucose tests, which may include an A1C test."
+  },
+  {
+    "id": "diabetes-high-blood-sugar",
+    "title": "High blood sugar (hyperglycemia): general steps",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/ency/patientinstructions/000332.htm",
+    "reviewed_on": "2026-11-08",
+    "text": "High blood sugar, also called high blood glucose or hyperglycemia, may cause thirst or dry mouth, blurry vision, dry skin, weakness, tiredness, and frequent urination. If a blood sugar reading is above your personal target, follow the high-reading or sick-day plan provided by your diabetes care team and check your glucose as they instructed. Take diabetes medicines only as prescribed; do not make an extra dose or change your dose unless your own prescribed plan tells you to. Contact your health care provider if your glucose remains outside your target or you do not know why it is high. Individual targets and care plans vary."
+  },
+  {
+    "id": "diabetes-high-blood-sugar-ketones",
+    "title": "High blood sugar and ketone guidance",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/ency/patientinstructions/000332.htm",
+    "reviewed_on": "2026-11-08",
+    "text": "For some people with diabetes, a clinician may recommend checking ketones when blood sugar stays above their target. MedlinePlus describes checking ketones when a person with type 1 diabetes has unexplained readings above target for more than 6 hours, or a person with type 2 diabetes has unexplained readings above target for more than 3 days. Follow your own care team's instructions; if ketones are present, contact your provider or seek emergency care."
+  },
+  {
+    "id": "diabetes-ketoacidosis-emergency",
+    "title": "Diabetic ketoacidosis warning signs and emergency care",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/ency/article/000320.htm",
+    "reviewed_on": "2026-11-08",
+    "text": "Diabetic ketoacidosis (DKA) is a life-threatening emergency. Warning signs requiring emergency care include decreased consciousness, fruity-smelling breath, nausea and vomiting, or trouble breathing. If ketones are present, contact a health care provider right away and do not delay. Call your local emergency number or go to an emergency department for these severe warning signs."
+  },
+  {
+    "id": "diabetes-low-blood-sugar",
+    "title": "Low blood sugar (hypoglycemia): signs and safety",
+    "source_name": "MedlinePlus Medical Encyclopedia",
+    "source_url": "https://medlineplus.gov/ency/article/000386.htm",
+    "reviewed_on": "2026-11-08",
+    "text": "Low blood sugar, also called low blood glucose or hypoglycemia, can cause shaking, sweating, hunger, a fast heartbeat, headache, weakness, blurry vision, or confusion. For many people with diabetes, a reading below 70 mg/dL (3.9 mmol/L) is considered low, though an individual's care team may provide specific instructions. Severe hypoglycemia can cause seizures or loss of consciousness and is an emergency. Follow the low-glucose plan provided by a health care professional; get emergency help if someone is unconscious, cannot be woken, or is having a seizure. Do not give food or drink to someone who is unconscious."
+  },
+  {
+    "id": "diabetes-long-term-complications",
+    "title": "Possible long-term complications of diabetes",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/diabetescomplications.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Over time, high blood glucose can contribute to long-term complications and affect organs and body systems including the eyes, feet, gums and teeth, heart and blood vessels, kidneys, nerves, bladder, and skin. Complications do not occur in the same way for everyone. Regular care and monitoring with a health care provider can help manage diabetes and its risks; a chatbot cannot determine whether a person has a complication."
+  },
+  {
+    "id": "heart-disease-overview",
+    "title": "Heart disease overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/heartdiseases.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Heart disease is a broad term for many heart problems. Coronary artery disease is a common type in which plaque builds up in arteries supplying the heart. Heart disease can also involve heart rhythm, valves, or muscle. Causes depend on the specific condition."
+  },
+  {
+    "id": "heart-disease-risk-evaluation",
+    "title": "Heart disease risk and evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/heartdiseases.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Heart disease risk can be affected by age, family history, smoking, physical activity, diet, alcohol use, high blood pressure, high cholesterol, diabetes, and other health conditions. Evaluation may include medical and family history, a physical exam, heart tests, and blood tests. Symptoms and care depend on the type of heart disease."
+  },
+  {
+    "id": "heart-attack-warning-signs",
+    "title": "Heart attack warning signs and emergency response",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/heartattack.html",
+    "reviewed_on": "2026-11-08",
+    "text": "A heart attack happens when blood flow to the heart is suddenly blocked and is a medical emergency. Symptoms can include chest discomfort, pain or discomfort in the upper body, shortness of breath, nausea, dizziness, palpitations, or cold sweat; symptoms vary and may be mild. If you think you or someone else may be having a heart attack, call your local emergency number immediately, even if you are unsure. Do not wait for a chatbot to assess symptoms."
+  },
+  {
+    "id": "liver-disease-overview",
+    "title": "Liver disease overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/liverdiseases.html",
+    "reviewed_on": "2026-11-08",
+    "text": "The liver helps digest food, store energy, and remove harmful substances. Liver diseases have many causes, including viruses, medicines or other toxins, alcohol, inherited conditions, and cancer. Different liver diseases can have different signs and courses."
+  },
+  {
+    "id": "liver-disease-symptoms",
+    "title": "Liver disease signs and evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/liverdiseases.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Liver disease may cause abdominal or leg swelling, easy bruising, changes in stool or urine color, or jaundice, which is yellowing of the skin or eyes. Some people have no symptoms. Imaging and liver function tests can help health care providers evaluate possible liver damage; a chatbot or image classifier cannot diagnose liver disease."
+  },
+  {
+    "id": "liver-disease-types-and-tests",
+    "title": "Liver disease types and evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/liverdiseases.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Liver diseases include viral hepatitis, liver injury related to medicines, toxins or alcohol, fatty liver disease, cirrhosis, liver cancer, and inherited conditions. Causes and symptoms vary, and some people have no symptoms. A health care provider may use medical history, blood tests such as liver function tests, and imaging to evaluate possible liver disease."
+  },
+  {
+    "id": "malaria-overview",
+    "title": "Malaria overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/malaria.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Malaria is a potentially serious disease caused by parasites and usually spread through the bite of an infected mosquito. Risk is associated with travel to places where malaria occurs. Symptoms can include fever, chills, flu-like symptoms, vomiting, diarrhea, and jaundice."
+  },
+  {
+    "id": "malaria-testing-prevention",
+    "title": "Malaria testing and travel prevention",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/malaria.html",
+    "reviewed_on": "2026-11-08",
+    "text": "A blood test can diagnose malaria, and treatment depends on the parasite type and where the infection was acquired. People traveling to areas where malaria occurs should consult a health care provider about prevention before travel. MedlinePlus describes insect repellent, covering exposed skin, and mosquito netting as prevention measures."
+  },
+  {
+    "id": "malaria-travel-and-symptoms",
+    "title": "Malaria symptoms and travel-related risk",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/malaria.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Malaria is a potentially life-threatening parasitic infection usually spread by an infected mosquito. Symptoms may include fever, chills, flu-like illness, vomiting, diarrhea, or jaundice. A blood test is used to diagnose malaria. A person with fever after travel to an area where malaria occurs should seek prompt medical evaluation and tell the clinician about the travel; a chatbot cannot rule malaria in or out."
+  },
+  {
+    "id": "parkinsons-overview",
+    "title": "Parkinson's disease overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/parkinsonsdisease.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Parkinson's disease is a movement disorder related to changes in brain cells that produce dopamine. Symptoms often begin gradually and may include tremor, stiffness, slowness of movement, and problems with balance or coordination. Other non-movement symptoms can also occur."
+  },
+  {
+    "id": "parkinsons-evaluation",
+    "title": "Parkinson's disease evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/parkinsonsdisease.html",
+    "reviewed_on": "2026-11-08",
+    "text": "There is no single specific test for Parkinson's disease. A doctor uses medical history and a neurological examination to evaluate it. Some medicines may help symptoms, but treatment choices must be discussed with a qualified health care professional; a prediction demo cannot establish a diagnosis."
+  },
+  {
+    "id": "parkinsons-symptoms-and-evaluation",
+    "title": "Parkinson's symptoms and evaluation",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/parkinsonsdisease.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Parkinson's symptoms often begin gradually and may start on one side of the body. Movement symptoms can include tremor, muscle stiffness, slowed movement, and impaired balance or coordination. Some people also have sleep, mood, speech, swallowing, or thinking changes. There is no single specific test; a health care professional evaluates medical history and performs a neurological examination because other conditions can have similar symptoms."
+  },
+  {
+    "id": "pneumonia-overview",
+    "title": "Pneumonia overview",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/pneumonia.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Pneumonia is an infection in one or both lungs that can cause the air sacs to fill with fluid or pus. Bacteria, viruses, and fungi can cause pneumonia. Severity varies depending on the cause, age, and overall health."
+  },
+  {
+    "id": "pneumonia-symptoms-risk",
+    "title": "Pneumonia symptoms and risk",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/pneumonia.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Possible pneumonia symptoms include fever, chills, cough, shortness of breath, chest pain when breathing or coughing, nausea, vomiting, and diarrhea. Symptoms vary by person. Risk can be higher for very young children, adults 65 and older, people with lung disease or weakened immune systems, and people with certain chronic conditions."
+  },
+  {
+    "id": "pneumonia-causes-tests-treatment",
+    "title": "Pneumonia causes, testing, and treatment",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/pneumonia.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Pneumonia can be caused by bacteria, viruses, or fungi. A health care provider may assess symptoms and perform an exam, chest X-ray, or blood tests; additional tests depend on illness severity and individual risk. How pneumonia is treated depends on the cause and severity: antibiotics treat bacterial pneumonia but do not work against viruses, while other medicines may be used for some viral or fungal causes. Only a clinician can decide what treatment is appropriate."
+  },
+  {
+    "id": "pneumonia-prevention",
+    "title": "Pneumonia prevention",
+    "source_name": "MedlinePlus, U.S. National Library of Medicine",
+    "source_url": "https://medlineplus.gov/pneumonia.html",
+    "reviewed_on": "2026-11-08",
+    "text": "Vaccines can help prevent some pneumonia, including pneumonia caused by pneumococcal bacteria or influenza virus. Handwashing, not smoking, and general healthy habits may also help reduce risk. Ask a health care provider which vaccines are appropriate for your age and health."
+  },
+  {
+    "id": "healthlens-how-to",
+    "title": "Using the HealthLens demos",
+    "source_name": "HealthLens project documentation",
+    "source_url": "",
+    "reviewed_on": "2026-11-08",
+    "text": "To try a HealthLens demo, select a tool from the sidebar and follow its on-screen instructions. Some demos ask for health measurements or symptoms; image demos ask for an image upload. Results explain the model output for the demo only. They are educational and cannot diagnose a condition or guide treatment."
+  },
+  {
+    "id": "healthlens-project-scope",
+    "title": "HealthLens project and prediction demo limits",
+    "source_name": "HealthLens project documentation",
+    "source_url": "",
+    "reviewed_on": "2026-11-08",
+    "text": "HealthLens is an educational demonstration, not a medical device or clinical service. It includes symptom, health-measurement, and image-classification demos for conditions including heart disease, diabetes, liver disease, malaria, pneumonia, Parkinson's disease, and Alzheimer's MRI dataset categories. Model output is a dataset prediction, not a diagnosis. Do not use the demos to decide treatment, medication, or whether to seek care."
+  },
+  {
+    "id": "healthlens-alzheimer-model",
+    "title": "HealthLens Alzheimer's MRI model",
+    "source_name": "HealthLens project documentation",
+    "source_url": "",
+    "reviewed_on": "2026-11-08",
+    "text": "The HealthLens Alzheimer's MRI demo classifies an uploaded image into one of four labels from its training dataset: Mild Demented, Moderate Demented, Non Demented, or Very MildDemented. These are dataset categories only. The model is not validated to diagnose Alzheimer's disease and its score is not a clinical probability."
+  }
+]
