@@ -1446,21 +1446,63 @@ def build_chat_messages(chat_messages):
   ]
 
 
+# def render_sources(sources):
+#   if not sources:
+#     return
+#   st.markdown("**Sources**")
+#   for source in sources:
+#     citation = source["citation"]
+#     source_name = source["source_name"]
+#     reviewed_on = source.get("reviewed_on")
+#     suffix = f" · reviewed {reviewed_on}" if reviewed_on else ""
+#     if source["source_url"]:
+#       st.markdown(
+#           f"- [{citation}] [{source_name}]({source['source_url']}){suffix}"
+#       )
+#     else:
+#       st.markdown(f"- [{citation}] {source_name}{suffix}")
+
+import html
+import streamlit as st
+
+
 def render_sources(sources):
-  if not sources:
-    return
-  st.markdown("**Sources**")
-  for source in sources:
-    citation = source["citation"]
-    source_name = source["source_name"]
-    reviewed_on = source.get("reviewed_on")
-    suffix = f" · reviewed {reviewed_on}" if reviewed_on else ""
-    if source["source_url"]:
-      st.markdown(
-          f"- [{citation}] [{source_name}]({source['source_url']}){suffix}"
-      )
-    else:
-      st.markdown(f"- [{citation}] {source_name}{suffix}")
+    if not sources:
+        return
+
+    items_html = []
+    for source in sources:
+        citation = html.escape(str(source.get("citation", "")))
+        source_name = html.escape(str(source.get("source_name", "")))
+        source_url = source.get("source_url")
+        reviewed_on = source.get("reviewed_on")
+
+        suffix = (
+            f" &middot; reviewed {html.escape(str(reviewed_on))}"
+            if reviewed_on
+            else ""
+        )
+
+        if source_url:
+            clean_url = html.escape(source_url)
+            link_or_text = f'<a href="{clean_url}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">{source_name}</a>'
+        else:
+            link_or_text = source_name
+
+        items_html.append(
+            f'<li style="margin-bottom: 2px;">[{citation}] {link_or_text}{suffix}</li>'
+        )
+
+    sources_block = f"""
+    <div style="font-size: 0.78rem; line-height: 1.25; opacity: 0.82; margin-top: 8px;">
+        <span style="font-weight: 600; display: block; margin-bottom: 4px;">Sources</span>
+        <ul style="margin: 0; padding-left: 1.1rem; list-style-type: disc;">
+            {"".join(items_html)}
+        </ul>
+    </div>
+    """
+
+    st.markdown(sources_block, unsafe_allow_html=True)
 
 
 ##initialize our streamlit app
