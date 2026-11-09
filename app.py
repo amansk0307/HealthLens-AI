@@ -38,6 +38,19 @@ from code.chatbot_rag import (
     retrieve_passages,
     unique_sources,
 )
+from code.groq_client import (
+    GroqAPIError,
+    normalize_generated_text,
+    stream_groq_response,
+)
+from code.health_tutor import (
+    TUTOR_TOPICS,
+    TutorResponseError,
+    create_learning_plan,
+    evaluate_answer,
+    generate_lesson,
+    retrieve_topic_passages,
+)
 from code.helper import prepare_symptoms_array
 
 
@@ -476,6 +489,61 @@ st.markdown(
     [data-testid="stHeader"] {
         background: rgba(255, 255, 255, 0.9);
     }
+    .st-key-disease_match_1,
+    .st-key-disease_match_2,
+    .st-key-disease_match_3 {
+        min-height: 100%;
+    }
+    .st-key-disease_match_1 [data-testid="stVerticalBlockBorderWrapper"],
+    .st-key-disease_match_2 [data-testid="stVerticalBlockBorderWrapper"],
+    .st-key-disease_match_3 [data-testid="stVerticalBlockBorderWrapper"] {
+        height: 100%;
+        border: 1px solid #D7E9E4 !important;
+        border-radius: 1.25rem !important;
+        background: linear-gradient(160deg, #FFFFFF 0%, #F3FAF8 100%) !important;
+        box-shadow: 0 10px 28px rgba(15, 118, 110, 0.08) !important;
+        transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .st-key-disease_match_1:hover [data-testid="stVerticalBlockBorderWrapper"],
+    .st-key-disease_match_2:hover [data-testid="stVerticalBlockBorderWrapper"],
+    .st-key-disease_match_3:hover [data-testid="stVerticalBlockBorderWrapper"] {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 34px rgba(15, 118, 110, 0.14) !important;
+    }
+    .st-key-disease_match_1 [data-testid="stProgress"],
+    .st-key-disease_match_2 [data-testid="stProgress"],
+    .st-key-disease_match_3 [data-testid="stProgress"] {
+        margin: 0.15rem 0 0.75rem;
+    }
+    .st-key-tutor_journey {
+        padding: 0.85rem 1rem;
+    }
+    .st-key-tutor_journey [data-testid="stVerticalBlockBorderWrapper"] {
+        border: 1px solid #D7E9E4;
+        border-radius: 1rem;
+        background: linear-gradient(120deg, #F0FDFA 0%, #E6F3EF 100%) !important;
+    }
+    .st-key-tutor_lesson_card [data-testid="stVerticalBlockBorderWrapper"] {
+        border: 1px solid #D7E9E4 !important;
+        border-radius: 1.15rem !important;
+        background: #FFFFFF !important;
+        box-shadow: 0 8px 24px rgba(15, 118, 110, 0.07) !important;
+    }
+    .tutor-stage {
+        color: #4F6F6B;
+        font-size: 0.78rem;
+        font-weight: 650;
+        text-align: center;
+    }
+    .tutor-stage-active {
+        color: #0F766E;
+    }
+    .tutor-score {
+        color: #115E59;
+        font-size: 1.15rem;
+        font-weight: 750;
+        text-align: right;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -535,7 +603,8 @@ with st.sidebar:
                             'Malaria Detector',
                             'Alzheimer MRI Detector',
                             'Risk Factor Assessment',
-                            'Help - ChatBot'],
+                            'Help - ChatBot',
+                            'Health Literacy Tutor'],
 
                            icons=[
                                'house',
@@ -549,6 +618,7 @@ with st.sidebar:
                                'diagram-3',
                                'graph-up',
                                'chat-dots',
+                               'mortarboard',
                            ],
                            default_index=0,
                            styles={
@@ -607,7 +677,8 @@ if selected == 'Disease Prediction':
     render_page_header(
         "Symptom-based screening",
         "Explore possible conditions",
-        "Select the symptoms to see the model's best-matching condition and its estimated score.",
+        "Select symptoms to see the model's three closest dataset matches and their scores. "
+        "This educational demo is not a diagnosis.",
     )
     image = Image.open('assets/symptoms_illustration.png')
     st.image(image, use_container_width=True)
@@ -618,21 +689,53 @@ if selected == 'Disease Prediction':
 
     # Trigger XGBoost model
     if st.button('Predict'): 
-        # Run the model with the python script
-        
-        prediction, prob = disease_model.predict(X)
-        st.write(f'## Disease: {prediction} with {prob*100:.2f}% probability')
-
-
-        tab1, tab2= st.tabs(["Description", "Precautions"])
-
-        with tab1:
-            st.write(disease_model.describe_predicted_disease())
-
-        with tab2:
-            precautions = disease_model.predicted_disease_precautions()
-            for i in range(4):
-                st.write(f'{i+1}. {precautions[i]}')
+        if not symptoms:
+            st.warning("Select at least one symptom to see model matches.")
+        else:
+            predictions = disease_model.predict_top_k(X, top_k=3)
+            st.markdown(
+                """
+                <div class="page-hero" style="padding: 0.9rem 1.2rem;">
+                  <div class="page-hero-kicker">Your symptom matches</div>
+                  <p class="page-hero-description">
+                    These are the model's closest matches from its training labels,
+                    not diagnoses or calibrated medical probabilities.
+                  </p>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            match_columns = st.columns(len(predictions))
+            rank_labels = ("CLOSEST MATCH", "ALSO MATCHED", "ALSO MATCHED")
+            for rank, ((disease_name, score), column) in enumerate(
+                zip(predictions, match_columns), start=1
+            ):
+                with column:
+                    with st.container(border=True, key=f"disease_match_{rank}"):
+                        st.caption(f"✦  {rank_labels[rank - 1]}")
+                        st.subheader(disease_name)
+                        st.markdown(f"**Model ranking score · {score:.1%}**")
+                        st.progress(max(0.0, min(float(score), 1.0)))
+                        st.markdown("**About this label**")
+                        st.write(disease_model.describe_disease(disease_name))
+                        with st.expander("View dataset precautions"):
+                            st.caption(
+                                "These are included in the demo dataset for "
+                                "illustration only—not medical advice."
+                            )
+                            precautions = disease_model.disease_precautions(
+                                disease_name
+                            )
+                            available_precautions = [
+                                str(precaution).strip()
+                                for precaution in precautions
+                                if pd.notna(precaution) and str(precaution).strip()
+                            ]
+                            if available_precautions:
+                                for precaution in available_precautions:
+                                    st.markdown(f"- {precaution}")
+                            else:
+                                st.caption("No dataset precautions are available.")
 
 
 
@@ -1299,8 +1402,6 @@ import streamlit as st
 import os
 import textwrap
 
-import google.generativeai as genai
-from google.api_core.exceptions import GoogleAPIError
 from streamlit.errors import StreamlitSecretNotFoundError
 
 CHATBOT_SYSTEM_INSTRUCTION = """
@@ -1320,27 +1421,48 @@ If a user describes a possible medical emergency, advise them to contact local
 emergency services immediately.
 Do not request personal identifiers.
 """
-CHATBOT_PROMPT_VERSION = "rag-3"
 
-# Disable Application Default Credentials (ADC) using environment variable
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ""
 
-def get_chat_session():
-  genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-  model_name = 'gemini-3.8-flash'
-  if ("gemini_chat" not in st.session_state
-      or st.session_state.get("gemini_model_name") != model_name
-      or st.session_state.get("gemini_prompt_version") != CHATBOT_PROMPT_VERSION):
-    # model = genai.GenerativeModel(model_name)
-    model = genai.GenerativeModel(
-        model_name,
-        generation_config={"max_output_tokens": 1024},
-        system_instruction=CHATBOT_SYSTEM_INSTRUCTION,
-        )
-    st.session_state.gemini_chat = model.start_chat(history=[])
-    st.session_state.gemini_model_name = model_name
-    st.session_state.gemini_prompt_version = CHATBOT_PROMPT_VERSION
-  return st.session_state.gemini_chat
+def get_groq_api_key():
+  try:
+    api_key = st.secrets.get("GROQ_API_KEY")
+  except StreamlitSecretNotFoundError:
+    api_key = None
+  api_key = api_key or os.environ.get("GROQ_API_KEY")
+  if not api_key:
+    raise GroqAPIError(
+        "Configure GROQ_API_KEY in Streamlit secrets or as an environment variable."
+    )
+  return api_key
+
+
+def build_chat_messages(chat_messages):
+  return [
+      {"role": "system", "content": CHATBOT_SYSTEM_INSTRUCTION},
+      *[
+          {"role": item["role"], "content": item["content"]}
+          for item in chat_messages
+      ],
+  ]
+
+
+def render_sources(sources):
+  if not sources:
+    return
+  st.markdown("**Sources**")
+  for source in sources:
+    citation = source["citation"]
+    source_name = source["source_name"]
+    reviewed_on = source.get("reviewed_on")
+    suffix = f" · reviewed {reviewed_on}" if reviewed_on else ""
+    if source["source_url"]:
+      st.markdown(
+          f"- [{citation}] [{source_name}]({source['source_url']}){suffix}"
+      )
+    else:
+      st.markdown(f"- [{citation}] {source_name}{suffix}")
+
+
 ##initialize our streamlit app
 
 #st.set_page_config(page_title="Q&A Demo")
@@ -1408,12 +1530,16 @@ if selected == 'Help - ChatBot':
       }
       </style>
       <div class="vitalis-hero">
-        <div class="vitalis-kicker">Your private session assistant</div>
+        <div class="vitalis-kicker">Your source-grounded assistant</div>
         <div class="vitalis-title">Vitalis AI</div>
         <p class="vitalis-subtitle">Ask an educational health question and get an answer grounded in cited sources.</p>
       </div>
       """,
       unsafe_allow_html=True,
+  )
+  st.caption(
+      "Messages are sent to Groq's API to generate responses. "
+      "Don't include names, identifiers, or personal health details."
   )
   if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = []
@@ -1422,25 +1548,6 @@ if selected == 'Help - ChatBot':
   with clear_col:
     if st.button("Clear conversation", key="clear_vitalis_chat"):
       st.session_state.chat_messages = []
-      st.session_state.pop("gemini_chat", None)
-      st.session_state.pop("gemini_model_name", None)
-      st.session_state.pop("gemini_prompt_version", None)
-
-  def render_sources(sources):
-    if not sources:
-      return
-    st.markdown("**Sources**")
-    for source in sources:
-      citation = source["citation"]
-      source_name = source["source_name"]
-      reviewed_on = source.get("reviewed_on")
-      suffix = f" · reviewed {reviewed_on}" if reviewed_on else ""
-      if source["source_url"]:
-        st.markdown(
-            f"- [{citation}] [{source_name}]({source['source_url']}){suffix}"
-        )
-      else:
-        st.markdown(f"- [{citation}] {source_name}{suffix}")
 
   with st.container(border=True, key="vitalis_chat_history"):
     if not st.session_state.chat_messages:
@@ -1518,13 +1625,18 @@ if selected == 'Help - ChatBot':
       )
       sources = unique_sources(passages)
       try:
-        with st.spinner("Vitalis AI is checking the reference information..."):
-          chat = get_chat_session()
-          response = chat.send_message(message_with_context, stream=True)
+        with st.spinner("Vitalis AI is checking the reference information with Groq..."):
+          messages = build_chat_messages(st.session_state.chat_messages[:-1])
+          messages.append({"role": "user", "content": message_with_context})
           with st.chat_message("assistant"):
-            answer = st.write_stream(
-                chunk.text for chunk in response if chunk.text
-            )
+            answer_chunks = []
+            answer = ""
+            answer_placeholder = st.empty()
+            for chunk in stream_groq_response(messages, get_groq_api_key()):
+              answer_chunks.append(chunk)
+              answer = normalize_generated_text("".join(answer_chunks))
+              answer_placeholder.markdown(answer)
+            answer = normalize_generated_text("".join(answer_chunks))
             if answer:
               render_sources(sources)
         if not answer:
@@ -1533,8 +1645,202 @@ if selected == 'Help - ChatBot':
           st.session_state.chat_messages.append(
               {"role": "assistant", "content": answer, "sources": sources}
           )
-      except (GoogleAPIError, KeyError, StreamlitSecretNotFoundError) as error:
+      except GroqAPIError as error:
         st.error(f"Could not get a chatbot response: {error}")
+
+
+if selected == "Health Literacy Tutor":
+    render_page_header(
+        "Adaptive learning",
+        "Health literacy tutor",
+        "Learn a health topic through a source-grounded lesson plan, short explanations, "
+        "and check-ins that adapt to your answers.",
+    )
+    st.info(
+        "Tutor prompts and answers are sent to Groq's API. Don't enter names, "
+        "identifiers, or personal health information. This tutor provides education, "
+        "not personal medical advice."
+    )
+    topic_icons = {
+        "Alzheimer's disease and memory": "🧠",
+        "Diabetes": "⚡",
+        "Heart disease": "❤️",
+        "Liver disease": "🌿",
+        "Malaria": "🦟",
+        "Parkinson's disease": "🧩",
+        "Pneumonia": "🫁",
+    }
+    topic = st.selectbox(
+        "Choose your learning adventure",
+        options=list(TUTOR_TOPICS),
+        format_func=lambda value: f"{topic_icons.get(value, '📘')}  {value}",
+    )
+    if st.button("Start a learning quest", key="start_health_tutor"):
+        try:
+            session_started = False
+            with st.spinner("Building a source-grounded learning plan..."):
+                api_key = get_groq_api_key()
+                passages = retrieve_topic_passages(topic)
+                if not passages:
+                    st.error(
+                        "There isn't enough reviewed information to create a lesson "
+                        "for that topic yet."
+                    )
+                else:
+                    steps = create_learning_plan(topic, passages, api_key)
+                    st.session_state.health_tutor = {
+                        "topic": topic,
+                        "passages": passages,
+                        "steps": steps,
+                        "step_index": 0,
+                        "attempt_number": 1,
+                        "lesson": "",
+                        "feedback": "",
+                        "feedback_mastered": False,
+                        "mastered_previous_steps": 0,
+                        "learning_points": 0,
+                        "mastery_streak": 0,
+                        "completion_celebrated": False,
+                    }
+                    session_started = True
+            if session_started:
+                st.rerun()
+        except (GroqAPIError, TutorResponseError, ValueError) as error:
+            st.error(f"Could not start the tutor session: {error}")
+
+    tutor = st.session_state.get("health_tutor")
+    if tutor:
+        tutor.setdefault("learning_points", 0)
+        tutor.setdefault("mastery_streak", 0)
+        tutor.setdefault("completion_celebrated", False)
+        step_index = tutor["step_index"]
+        total_steps = len(tutor["steps"])
+        with st.container(border=True, key="tutor_journey"):
+            status_col, score_col = st.columns([3, 1])
+            with status_col:
+                st.markdown(f"### {topic_icons.get(tutor['topic'], '📘')}  {tutor['topic']} quest")
+                st.caption(
+                    f"Checkpoint {min(step_index + 1, total_steps)} of "
+                    f"{total_steps} · Keep going at your own pace"
+                )
+            with score_col:
+                st.markdown(
+                    f'<div class="tutor-score">✨ {tutor["learning_points"]} XP</div>',
+                    unsafe_allow_html=True,
+                )
+                st.caption(f"🔥 {tutor['mastery_streak']} in a row")
+            stage_columns = st.columns(total_steps)
+            for stage_index, stage_column in enumerate(stage_columns):
+                if stage_index < step_index:
+                    stage_text = f"✓  {stage_index + 1} · Complete"
+                    stage_class = "tutor-stage"
+                elif stage_index == step_index and step_index < total_steps:
+                    stage_text = f"✦  {stage_index + 1} · Playing"
+                    stage_class = "tutor-stage tutor-stage-active"
+                else:
+                    stage_text = f"○  {stage_index + 1} · Ahead"
+                    stage_class = "tutor-stage"
+                with stage_column:
+                    st.markdown(
+                        f'<div class="{stage_class}">{stage_text}</div>',
+                        unsafe_allow_html=True,
+                    )
+        if tutor["feedback"]:
+            if tutor["feedback_mastered"]:
+                st.success(f"{tutor['feedback']}  ✨ +25 XP")
+            else:
+                st.info(f"{tutor['feedback']}  No points lost—try again!")
+        if step_index >= len(tutor["steps"]):
+            if not tutor["completion_celebrated"]:
+                st.balloons()
+                tutor["completion_celebrated"] = True
+            st.success(
+                f"Quest complete! You earned {tutor['learning_points']} XP "
+                "and the **Curious Mind** badge. 🎉"
+            )
+            st.write("Pick another topic above whenever you're ready for a new quest.")
+        else:
+            step = tutor["steps"][step_index]
+            st.progress(step_index / total_steps)
+            st.caption(f"QUEST {step_index + 1}  /  {total_steps}")
+            st.subheader(f"🗺️ {step['title']}")
+            st.markdown(f"*Your mission: {step['objective']}*")
+
+            if not tutor["lesson"]:
+                try:
+                    with st.spinner("Preparing your lesson..."):
+                        tutor["lesson"] = generate_lesson(
+                            tutor["topic"],
+                            step,
+                            tutor["passages"],
+                            get_groq_api_key(),
+                            previous_feedback=tutor["feedback"],
+                            attempt_number=tutor["attempt_number"],
+                            mastered_previous_steps=tutor[
+                                "mastered_previous_steps"
+                            ],
+                        )
+                except (GroqAPIError, TutorResponseError, ValueError) as error:
+                    st.error(f"Could not generate the lesson: {error}")
+
+            if tutor["lesson"]:
+                with st.container(border=True, key="tutor_lesson_card"):
+                    st.markdown(tutor["lesson"])
+                lesson_sources = unique_sources(
+                    [
+                        passage
+                        for passage in tutor["passages"]
+                        if passage["citation"] in step["source_citations"]
+                    ]
+                )
+                render_sources(lesson_sources)
+                with st.expander("🧭 Need a hint? Open a source card"):
+                    for passage in tutor["passages"]:
+                        if passage["citation"] in step["source_citations"]:
+                            st.markdown(
+                                f"**[{passage['citation']}] {passage['title']}**"
+                            )
+                            st.write(passage["text"])
+                answer = st.text_area(
+                    "Your answer · complete the check to earn 25 XP",
+                    key=(
+                        f"tutor_answer_{step_index}_"
+                        f"{tutor['attempt_number']}"
+                    ),
+                    placeholder="Answer the check question using the lesson—not personal health information.",
+                )
+                if st.button("Check my answer", key="check_tutor_answer"):
+                    if not answer.strip():
+                        st.warning("Enter an answer to continue.")
+                    else:
+                        try:
+                            with st.spinner("Reviewing your understanding..."):
+                                result = evaluate_answer(
+                                    tutor["topic"],
+                                    step,
+                                    tutor["lesson"],
+                                    answer.strip(),
+                                    tutor["passages"],
+                                    get_groq_api_key(),
+                                )
+                            tutor["feedback"] = result["feedback"]
+                            tutor["feedback_mastered"] = result["mastered"]
+                            if result["mastered"]:
+                                tutor["learning_points"] += 25
+                                tutor["mastery_streak"] += 1
+                                tutor["step_index"] += 1
+                                tutor["mastered_previous_steps"] += 1
+                                tutor["attempt_number"] = 1
+                                if tutor["step_index"] == total_steps:
+                                    tutor["completion_celebrated"] = True
+                                st.balloons()
+                            else:
+                                tutor["mastery_streak"] = 0
+                                tutor["attempt_number"] += 1
+                            tutor["lesson"] = ""
+                            st.rerun()
+                        except (GroqAPIError, TutorResponseError, ValueError) as error:
+                            st.error(f"Could not review your answer: {error}")
 ## If ask button is clicked
 
 

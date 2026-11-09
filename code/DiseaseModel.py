@@ -1,5 +1,6 @@
 import xgboost as xgb
 import pandas as pd
+from code.disease_ranking import rank_disease_probabilities
 
 class DiseaseModel:
 
@@ -17,12 +18,23 @@ class DiseaseModel:
         self.model.save_model(model_path)
 
     def predict(self, X):
+        prediction = self.predict_top_k(X, top_k=1)[0]
+        self.pred_disease = prediction[0]
+        return prediction
+
+    def predict_top_k(self, X, top_k=3):
         self.symptoms = X
-        disease_pred_idx = self.model.predict(self.symptoms)
-        self.pred_disease = self.diseases[disease_pred_idx].values[0]
-        disease_probability_array = self.model.predict_proba(self.symptoms)
-        disease_probability = disease_probability_array[0, disease_pred_idx[0]]
-        return self.pred_disease, disease_probability
+        probabilities = self.model.predict_proba(self.symptoms)[0]
+        class_labels = getattr(self.model, "classes_", range(len(probabilities)))
+        predictions = rank_disease_probabilities(
+            probabilities,
+            class_labels,
+            self.diseases,
+            top_k=top_k,
+        )
+        if predictions:
+            self.pred_disease = predictions[0][0]
+        return predictions
 
     
     def describe_disease(self, disease_name):
@@ -33,8 +45,11 @@ class DiseaseModel:
         # Read disease dataframe
         desc_df = pd.read_csv('data/symptom_Description.csv')
         desc_df = desc_df.apply(lambda col: col.str.strip())
+        descriptions = desc_df[desc_df['Disease'] == disease_name]['Description']
+        if descriptions.empty:
+            return "No dataset description is available for this model label."
 
-        return desc_df[desc_df['Disease'] == disease_name]['Description'].values[0]
+        return descriptions.values[0]
 
     def describe_predicted_disease(self):
 
