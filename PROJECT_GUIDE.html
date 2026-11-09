@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>HealthLens-AI — Project Field Guide</title>
+  <style>
+    :root {
+      --ink: #193936;
+      --muted: #58716d;
+      --teal: #0f766e;
+      --deep: #115e59;
+      --pale: #eaf5f2;
+      --paper: #fff;
+      --line: #d6e5e1;
+      --gold: #a45b0a;
+      --gold-bg: #fff6e8;
+      --shadow: 0 12px 32px rgb(22 66 60 / 8%);
+      --radius: 18px;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #f4f8f7;
+      font: 16px/1.65 var(--sans);
+    }
+    a { color: var(--deep); text-decoration-thickness: .08em; text-underline-offset: .17em; }
+    a:hover { color: var(--teal); }
+    code, kbd { font: .9em var(--mono); color: #155e57; }
+    code {
+      background: #edf5f2;
+      border: 1px solid #dfece8;
+      border-radius: 5px;
+      padding: .08em .32em;
+      overflow-wrap: anywhere;
+    }
+    pre {
+      overflow-x: auto;
+      margin: 1rem 0;
+      padding: 1.15rem 1.25rem;
+      color: #e8f4f1;
+      background: #183c39;
+      border-radius: 12px;
+      font: .86rem/1.65 var(--mono);
+      tab-size: 2;
+    }
+    pre code { color: inherit; background: none; border: 0; padding: 0; }
+    h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -.025em; }
+    h1 { margin: .25rem 0 1rem; font-size: clamp(2.7rem, 7vw, 5.5rem); }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.75rem, 4vw, 2.45rem); }
+    h3 { margin: 1.6rem 0 .45rem; font-size: 1.15rem; }
+    p { margin: .65rem 0 1rem; }
+    ul, ol { padding-left: 1.35rem; }
+    li { margin: .3rem 0; }
+    .skip { position: absolute; top: -5rem; left: 1rem; z-index: 20; }
+    .skip:focus { top: 1rem; background: white; padding: .75rem; }
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: .75rem max(1.25rem, calc((100vw - 1200px)/2));
+      border-bottom: 1px solid rgb(214 229 225 / 85%);
+      background: rgb(255 255 255 / 92%); backdrop-filter: blur(14px);
+    }
+    .brand { display: flex; align-items: center; gap: .65rem; font-weight: 750; color: var(--ink); }
+    .brand-mark {
+      display: grid; width: 2rem; height: 2rem; place-items: center;
+      color: white; background: var(--teal); border-radius: 9px; font-size: .85rem;
+    }
+    .topbar-actions { display: flex; gap: .5rem; align-items: center; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 2.45rem; padding: .45rem .8rem; border: 1px solid var(--line);
+      border-radius: 9px; color: var(--ink); background: white; font: 650 .85rem var(--sans);
+      text-decoration: none; cursor: pointer;
+    }
+    .button:hover { border-color: var(--teal); color: var(--deep); }
+    .button.primary { color: white; background: var(--teal); border-color: var(--teal); }
+    .button.primary:hover { color: white; background: var(--deep); }
+    .layout {
+      display: grid; grid-template-columns: 220px minmax(0, 900px);
+      gap: 2.25rem; max-width: 1240px; margin: 0 auto; padding: 2rem 1.25rem 5rem;
+    }
+    .toc {
+      position: sticky; top: 5rem; align-self: start;
+      max-height: calc(100vh - 6rem); overflow: auto;
+      padding: .85rem; border: 1px solid var(--line); border-radius: 14px;
+      background: white; box-shadow: 0 4px 16px rgb(22 66 60 / 4%);
+    }
+    .toc-title { padding: .45rem .55rem .65rem; color: var(--muted); font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .toc a {
+      display: block; padding: .42rem .55rem; border-radius: 7px;
+      color: #45605c; font-size: .8rem; line-height: 1.3; text-decoration: none;
+    }
+    .toc a:hover, .toc a:focus { color: var(--deep); background: var(--pale); }
+    main { min-width: 0; }
+    .hero {
+      position: relative; overflow: hidden; padding: clamp(2rem, 6vw, 4rem);
+      color: white; background: linear-gradient(128deg, #0d5550, #0f766e 63%, #3b9890);
+      border-radius: 28px; box-shadow: var(--shadow);
+    }
+    .hero::after {
+      position: absolute; right: -2rem; top: -5.5rem; content: "";
+      width: 19rem; height: 19rem; border: 1px solid rgb(255 255 255 / 17%);
+      border-radius: 50%; box-shadow: 0 0 0 32px rgb(255 255 255 / 5%), 0 0 0 64px rgb(255 255 255 / 4%);
+    }
+    .hero > * { position: relative; z-index: 1; }
+    .eyebrow { color: #b7e5dc; font-size: .75rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .hero p { max-width: 660px; color: #e1f1ed; font-size: 1.1rem; }
+    .hero .hero-note { margin-top: 2rem; font-size: .8rem; color: #d1e8e3; }
+    .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+    .chip { display: inline-flex; padding: .35rem .65rem; border: 1px solid rgb(255 255 255 / 28%); border-radius: 999px; color: #f1fbf8; font-size: .78rem; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin: 1.2rem 0; }
+    .stat { padding: 1rem; border: 1px solid var(--line); border-radius: 13px; background: white; }
+    .stat strong { display: block; color: var(--teal); font-size: 1.45rem; }
+    .stat span { color: var(--muted); font-size: .79rem; }
+    .section { scroll-margin-top: 5.5rem; margin-top: 2rem; padding: clamp(1.25rem, 3vw, 2.1rem); border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: 0 5px 20px rgb(22 66 60 / 4%); }
+    .section-label { margin-bottom: .35rem; color: var(--teal); font-size: .7rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    .section-intro { max-width: 720px; margin-top: -.25rem; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card { min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 12px; background: #fbfdfc; }
+    .card h3 { margin-top: .15rem; }
+    .card p:last-child, .card ul:last-child { margin-bottom: .1rem; }
+    .card .icon { display: inline-grid; width: 2rem; height: 2rem; margin-bottom: .35rem; place-items: center; border-radius: 9px; color: var(--deep); background: var(--pale); font-weight: 800; }
+    .callout { margin: 1rem 0; padding: 1rem 1.1rem; border-left: 4px solid var(--teal); border-radius: 0 11px 11px 0; background: #eff8f5; }
+    .callout.warning { border-color: #d28a22; background: var(--gold-bg); }
+    .callout p:last-child { margin-bottom: 0; }
+    .flow {
+      display: flex; flex-wrap: wrap; align-items: stretch; gap: .5rem;
+      margin: 1rem 0; padding: 1rem; border: 1px solid var(--line);
+      border-radius: 13px; background: #f7fbfa;
+    }
+    .flow-step {
+      flex: 1 1 115px; display: flex; flex-direction: column; justify-content: center;
+      min-height: 76px; padding: .65rem .75rem; border: 1px solid #cfe2dc;
+      border-radius: 9px; background: white; font-size: .8rem; font-weight: 700;
+    }
+    .flow-step small { display: block; margin-top: .25rem; color: var(--muted); font-size: .7rem; font-weight: 450; }
+    .arrow { align-self: center; color: var(--teal); font-size: 1.25rem; font-weight: 800; }
+    .diagram { overflow-x: auto; margin: 1rem 0; padding: .65rem; border: 1px solid var(--line); border-radius: 14px; background: #f8fbfa; }
+    .diagram svg { display: block; width: 100%; height: auto; }
+    .diagram figcaption { padding: .5rem .65rem .25rem; color: var(--muted); font-size: .78rem; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    th, td { padding: .7rem .75rem; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: #164b46; background: #eaf5f2; font-size: .77rem; letter-spacing: .025em; }
+    td:first-child { min-width: 160px; }
+    .filelist { list-style: none; padding: 0; }
+    .filelist li { display: grid; grid-template-columns: minmax(155px, .75fr) 1.4fr; gap: .75rem; margin: 0; padding: .65rem .1rem; border-bottom: 1px solid #edf2f0; }
+    .filelist code { align-self: start; width: fit-content; }
+    details { margin: .6rem 0; padding: .7rem .85rem; border: 1px solid var(--line); border-radius: 10px; background: #fbfdfc; }
+    summary { color: var(--deep); font-weight: 750; cursor: pointer; }
+    details[open] summary { margin-bottom: .55rem; }
+    .tag { display: inline-block; padding: .16rem .45rem; border-radius: 5px; background: #eaf5f2; color: var(--deep); font-size: .7rem; font-weight: 800; }
+    .timeline { position: relative; display: grid; gap: .75rem; margin: 1rem 0; }
+    .timeline article { display: grid; grid-template-columns: 2rem 1fr; gap: .7rem; }
+    .timeline .num { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border-radius: 50%; color: white; background: var(--teal); font-size: .8rem; font-weight: 800; }
+    .timeline article p { margin: .1rem 0 .6rem; }
+    .footer { margin: 2rem 0 1rem; padding: 1.25rem; color: var(--muted); text-align: center; font-size: .8rem; }
+    .hide-print { }
+    @media (max-width: 850px) {
+      .layout { display: block; padding-top: 1rem; }
+      .toc { position: static; max-height: 220px; margin-bottom: 1rem; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      body { font-size: 15px; }
+      .topbar { padding: .6rem .8rem; }
+      .brand-name { display: none; }
+      .button { font-size: .76rem; padding: .4rem .55rem; }
+      .layout { padding-inline: .7rem; }
+      .hero { border-radius: 18px; }
+      .grid, .grid.three { grid-template-columns: 1fr; }
+      .filelist li { grid-template-columns: 1fr; gap: .25rem; }
+    }
+    @media print {
+      @page { size: Letter; margin: .62in .62in .68in; }
+      body { background: white; color: #183633; font-size: 9.3pt; line-height: 1.42; }
+      .topbar, .toc, .hide-print, .skip { display: none !important; }
+      .layout { display: block; max-width: none; margin: 0; padding: 0; }
+      main { width: 100%; }
+      .hero { min-height: 8.7in; padding: 1.4in .65in .8in; border-radius: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .hero::after { right: 0; }
+      .section { margin: 0; padding: .35in .05in .2in; border: 0; border-radius: 0; box-shadow: none; break-before: page; }
+      .section:first-of-type { break-before: auto; }
+      .section h2 { font-size: 21pt; }
+      h1 { font-size: 36pt; }
+      h2, h3 { break-after: avoid; }
+      p, li { orphans: 3; widows: 3; }
+      pre, .callout, .card, .flow, figure, details { break-inside: avoid; }
+      .grid, .grid.three { gap: .1in; }
+      .card { padding: .12in; }
+      .diagram { break-inside: avoid; }
+      .table-wrap { overflow: visible; }
+      table { font-size: 7.4pt; }
+      th, td { padding: 4pt 5pt; }
+      a { color: #174e49; }
+      a[href^="http"]::after { content: ""; }
+      details > * { display: block !important; }
+      summary { list-style: none; }
+      .footer { break-before: auto; }
+      .section-label { color: #0f766e; }
+      .callout, .card, .stat, th, pre, .flow, .flow-step { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to guide</a>
+  <header class="topbar hide-print">
+    <a class="brand" href="#top" aria-label="HealthLens project guide home">
+      <span class="brand-mark">HL</span><span class="brand-name">HealthLens Project Guide</span>
+    </a>
+    <div class="topbar-actions">
+      <a class="button" href="#contents">Contents</a>
+      <a class="button" href="PROJECT_GUIDE.pdf" target="_blank" rel="noopener">Open PDF</a>
+      <button class="button primary" onclick="window.print()" type="button">Print / Save PDF</button>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="toc hide-print" id="contents" aria-label="Guide contents">
+      <div class="toc-title">In this guide</div>
+      <a href="#overview">Project at a glance</a>
+      <a href="#architecture">Architecture &amp; startup</a>
+      <a href="#prediction">Prediction pages</a>
+      <a href="#images">Image classifiers</a>
+      <a href="#chatbot">Vitalis AI chatbot</a>
+      <a href="#tutor">Health Literacy Tutor</a>
+      <a href="#files">Python file map</a>
+      <a href="#data">Data &amp; knowledge</a>
+      <a href="#models-assets">Models &amp; assets</a>
+      <a href="#support-files">Tests &amp; supporting files</a>
+      <a href="#run">Run, test &amp; maintain</a>
+      <a href="#reference">End-to-end reference</a>
+    </nav>
+    <main id="main">
+      <header class="hero" id="top">
+        <div class="eyebrow">A visual field guide to the repository</div>
+        <h1>HealthLens-AI</h1>
+        <p>Understand the app from the first Streamlit rerun to the final prediction or cited lesson: what every project area does, which files call which, and where the data and models fit.</p>
+        <div class="chips">
+          <span class="chip">Streamlit UI</span><span class="chip">ML demos</span>
+          <span class="chip">Local knowledge search</span><span class="chip">Groq-powered tutor</span>
+        </div>
+        <p class="hero-note">Repository-based guide · Updated November 2026 · Educational software, not a medical service</p>
+      </header>
+
+      <section class="section" id="overview">
+        <div class="section-label">01 / Start here</div>
+        <h2>The project in one minute</h2>
+        <p class="section-intro"><strong>HealthLens is a single-process Streamlit app.</strong> It brings together educational prediction demonstrations and a source-grounded chatbot and tutor. The UI and page orchestration live in one large script; reusable logic for symptom ranking, image inference, retrieval, Groq, and tutoring lives in <code>code/</code>.</p>
+        <div class="stats">
+          <div class="stat"><strong>1</strong><span>main UI entry point: <code>app.py</code></span></div>
+          <div class="stat"><strong>7</strong><span>active Python helper / training modules</span></div>
+          <div class="stat"><strong>32</strong><span>curated local chatbot knowledge entries</span></div>
+          <div class="stat"><strong>4</strong><span>focused automated test modules</span></div>
+        </div>
+        <div class="grid">
+          <article class="card"><span class="icon">UI</span><h3>The interface</h3><p>Sidebar navigation chooses a page. Streamlit reruns <code>app.py</code> as users interact; page blocks show forms, images, chat, and results.</p></article>
+          <article class="card"><span class="icon">ML</span><h3>The prediction demos</h3><p>Inputs go to saved classifiers or, for liver prediction, a decision tree fitted from a local CSV during the page run.</p></article>
+          <article class="card"><span class="icon">RAG</span><h3>The source-grounded assistant</h3><p>Questions are matched to local reviewed passages. The chatbot may ask Groq to word a response using those passages; some safety-sensitive replies are composed locally.</p></article>
+          <article class="card"><span class="icon">3×</span><h3>The learning tutor</h3><p>A three-step plan, short lessons, and answer checks are composed from reviewed passages and tracked in the current Streamlit session.</p></article>
+        </div>
+        <div class="callout warning"><strong>Important boundary.</strong> App output is educational demonstration output—not a diagnosis, calibrated medical probability, or treatment plan. Do not enter real names, identifiers, or personal health information into the Groq-backed features.</div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="section-label">02 / How the app starts</div>
+        <h2>Architecture &amp; request flow</h2>
+        <p class="section-intro">The menu is the routing mechanism. There is no separate API server, database, or front-end bundle in the active app.</p>
+        <figure class="diagram">
+          <svg viewBox="0 0 900 390" role="img" aria-labelledby="arch-title arch-desc">
+            <title id="arch-title">HealthLens architecture and data flow</title>
+            <desc id="arch-desc">Streamlit browser interactions rerun app.py, which calls local model helpers or the knowledge retrieval and Groq tutor services.</desc>
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#0f766e"/></marker>
+              <style>
+                .box{fill:#fff;stroke:#b9d8d0;stroke-width:2}.box2{fill:#eaf5f2;stroke:#83b9ad;stroke-width:2}
+                .ext{fill:#fff6e8;stroke:#e4bd7d;stroke-width:2}.txt{font:700 16px Inter,Arial,sans-serif;fill:#193936}
+                .sub{font:13px Inter,Arial,sans-serif;fill:#58716d}.line{stroke:#0f766e;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+                .dashed{stroke:#c0841a;stroke-width:2;stroke-dasharray:6 5;fill:none;marker-end:url(#arrow)}
+              </style>
+            </defs>
+            <rect x="28" y="146" width="145" height="80" rx="14" class="box2"/>
+            <text x="100" y="178" text-anchor="middle" class="txt">Browser</text><text x="100" y="201" text-anchor="middle" class="sub">Streamlit widgets</text>
+            <rect x="233" y="132" width="176" height="108" rx="14" class="box"/>
+            <text x="321" y="170" text-anchor="middle" class="txt">app.py</text><text x="321" y="193" text-anchor="middle" class="sub">routing + UI + state</text><text x="321" y="215" text-anchor="middle" class="sub">one script reruns</text>
+            <path d="M173 186 H226" class="line"/>
+            <rect x="475" y="28" width="190" height="78" rx="14" class="box"/>
+            <text x="570" y="59" text-anchor="middle" class="txt">Prediction routes</text><text x="570" y="82" text-anchor="middle" class="sub">local files + ML helpers</text>
+            <path d="M409 157 C439 157 441 67 468 67" class="line"/>
+            <rect x="710" y="28" width="165" height="78" rx="14" class="box2"/>
+            <text x="792" y="59" text-anchor="middle" class="txt">Result UI</text><text x="792" y="82" text-anchor="middle" class="sub">labels / scores</text>
+            <path d="M665 67 H703" class="line"/>
+            <rect x="475" y="156" width="190" height="78" rx="14" class="box"/>
+            <text x="570" y="187" text-anchor="middle" class="txt">chatbot_rag.py</text><text x="570" y="210" text-anchor="middle" class="sub">TF-IDF local retrieval</text>
+            <path d="M409 186 H468" class="line"/>
+            <rect x="710" y="145" width="165" height="94" rx="14" class="ext"/>
+            <text x="792" y="178" text-anchor="middle" class="txt">Groq API</text><text x="792" y="201" text-anchor="middle" class="sub">optional generation</text><text x="792" y="220" text-anchor="middle" class="sub">chat + tutor</text>
+            <path d="M665 185 H703" class="dashed"/>
+            <rect x="475" y="282" width="190" height="78" rx="14" class="box"/>
+            <text x="570" y="313" text-anchor="middle" class="txt">health_tutor.py</text><text x="570" y="336" text-anchor="middle" class="sub">plan / lesson / check</text>
+            <path d="M409 214 C439 214 441 321 468 321" class="line"/>
+            <path d="M570 234 V275" class="line"/>
+            <rect x="235" y="289" width="174" height="65" rx="14" class="box2"/>
+            <text x="322" y="316" text-anchor="middle" class="txt">data/</text><text x="322" y="338" text-anchor="middle" class="sub">CSV + reviewed JSON</text>
+            <path d="M409 321 C438 321 443 195 468 195" class="line"/>
+            <text x="700" y="276" class="sub">dashed = external API request</text>
+          </svg>
+          <figcaption>Most calls are direct Python function calls inside the Streamlit process. Groq is the only external service in the active chatbot/tutor path.</figcaption>
+        </figure>
+        <div class="timeline">
+          <article><span class="num">1</span><p><strong>Configure.</strong> <code>app.py</code> imports packages, reads the favicon, sets Streamlit page config, and injects global CSS.</p></article>
+          <article><span class="num">2</span><p><strong>Route.</strong> The sidebar menu sets <code>selected</code>; the matching conditional page block renders.</p></article>
+          <article><span class="num">3</span><p><strong>Collect.</strong> Widgets capture symptoms, measurements, images, chat text, or tutor answers.</p></article>
+          <article><span class="num">4</span><p><strong>Compute.</strong> The page calls a model/helper, retrieval module, or tutor service. Streamlit reruns the script on interactions.</p></article>
+          <article><span class="num">5</span><p><strong>Show.</strong> Results are rendered in the same page. Chat and tutor progress live in <code>st.session_state</code>, not durable storage.</p></article>
+        </div>
+        <div class="callout"><strong>Rerun detail:</strong> any top-level statement outside a page-specific conditional also runs again on interaction. In particular, Diabetes and Parkinson model deserialization is currently at module scope.</div>
+      </section>
+
+      <section class="section" id="prediction">
+        <div class="section-label">03 / Interactive pages</div>
+        <h2>Prediction pages: input to result</h2>
+        <h3>Symptom-based ranking</h3>
+        <div class="flow" aria-label="Symptom prediction flow">
+          <div class="flow-step">Choose symptoms<small>options come from dataset columns</small></div><span class="arrow">→</span>
+          <div class="flow-step">Encode features<small>one-row binary array</small></div><span class="arrow">→</span>
+          <div class="flow-step">XGBoost<small>three top class scores</small></div><span class="arrow">→</span>
+          <div class="flow-step">Rank &amp; explain<small>labels + dataset lookups</small></div>
+        </div>
+        <p><code>app.py</code> creates <code>DiseaseModel</code>, loads <code>models/xgboost_model.json</code>, and offers <code>all_symptoms</code>. <code>prepare_symptoms_array()</code> maps chosen symptom names to a fixed-size vector using <code>data/clean_dataset.tsv</code>. <code>DiseaseModel.predict_top_k()</code> calls XGBoost <code>predict_proba</code>, then <code>rank_disease_probabilities()</code> maps model classes to the ordered disease labels. The UI shows three matches, descriptions from <code>symptom_Description.csv</code>, and optional precaution text from <code>symptom_precaution.csv</code>.</p>
+        <p>The displayed scores are ranking scores, not calibrated clinical probabilities. Empty symptom selection is stopped with a warning.</p>
+        <h3>Measurement and questionnaire pages</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Page</th><th>Inputs → computation</th><th>Artifact / output</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Liver Disease Prediction</strong></td><td>Ten sliders; read liver CSV, median-fill missing ratio, train/test split, fit a new decision tree during page run, then predict.</td><td><code>data/liver_dataset.csv</code> → binary class.</td></tr>
+              <tr><td><strong>Heart Disease Prediction</strong></td><td>13 cardiovascular sliders → single-row feature input → classifier <code>predict</code>.</td><td><code>models/heart_disease_model.pkl</code> → binary class.</td></tr>
+              <tr><td><strong>Diabetes Prediction</strong></td><td>Eight numeric values in pregnancy, glucose, pressure, skin, insulin, BMI, pedigree, age order → <code>predict</code>.</td><td><code>models/diabetes_model.sav</code> → binary class.</td></tr>
+              <tr><td><strong>Parkison Prediction</strong></td><td>22 voice/acoustic measurements, assembled in model feature order → <code>predict</code>.</td><td><code>models/parkinsons_model.sav</code> → binary class.</td></tr>
+              <tr><td><strong>Risk Factor Assessment</strong></td><td>Checkboxes → hand-coded weights (2 or 3) summed; &lt;5 Low, &lt;10 Medium, otherwise High.</td><td>No learned model; fixed demonstration rule.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warning"><strong>Read the implementation literally.</strong> The Liver page feature vector starts Gender then Age, while the training CSV columns start Age then sex. Verify this feature order before relying on output. The diabetes and Parkinson pages also ask for a name; use dummy values only.</div>
+      </section>
+
+      <section class="section" id="images">
+        <div class="section-label">04 / Image inference</div>
+        <h2>Image classifiers</h2>
+        <div class="grid">
+          <article class="card"><span class="tag">MALARIA</span><h3>Cell image</h3><p>Upload JPG/PNG → resize to 224 × 224 → array shape <code>[1,224,224,3]</code>, scale by 1/255 → load <code>CNN_Model.h5</code> → threshold first output at 0.5 → infected / not infected message.</p><p><strong>When it runs:</strong> model loads on upload; inference waits for Predict. Assumes three color channels.</p></article>
+          <article class="card"><span class="tag">PNEUMONIA</span><h3>Chest X-ray</h3><p>Upload JPG/JPEG/PNG → RGB → resize 224 × 224 → scale by 1/255 → load <code>pneumonia_classifiers.h5</code> → call <code>predict</code> → threshold first output at 0.5.</p><p><strong>When it runs:</strong> prediction occurs on upload. A checkbox changes the preview, not the inference.</p></article>
+          <article class="card"><span class="tag">ALZHEIMER MRI</span><h3>MRI category</h3><p>Upload → convert RGB → cached model load → resize 244 × 244 → MobileNetV2 preprocessing → predicted class and score.</p><p><strong>Model builder:</strong> <code>code/alzheimer.py</code> constructs a DenseNet201 backbone with pooling and dense layers and loads <code>alzheimer_model.h5</code> weights.</p></article>
+        </div>
+        <h3>Alzheimer inference call chain</h3>
+        <pre><code>app.py: upload + image validation
+  └─ get_alzheimer_model()              [@st.cache_resource]
+       └─ code.alzheimer.load_alzheimer_model()
+            ├─ build DenseNet201 inference graph
+            └─ load models/alzheimer_model.h5 weights
+  └─ code.alzheimer.predict_alzheimer_image(image, model)
+       ├─ RGB + resize + MobileNetV2 preprocessing
+       └─ model.predict -> argmax -> four class names + score</code></pre>
+        <p>The class names are Mild Demented, Moderate Demented, Non Demented, and Very MildDemented. The helper uses nearest-neighbor resizing. Confirm that this preprocessing matches how the weights were trained: the helper builds DenseNet201 but uses MobileNetV2 preprocessing.</p>
+        <div class="callout warning"><strong>Model files do not certify clinical performance.</strong> This guide describes the checked-in inference paths. It does not validate training data, calibration, external performance, or fitness for clinical use. Confirm each model’s channel layout, output semantics, and preprocessing against its training pipeline.</div>
+      </section>
+
+      <section class="section" id="chatbot">
+        <div class="section-label">05 / Conversational AI</div>
+        <h2>Vitalis AI: local references, optional generation</h2>
+        <p class="section-intro">Search happens locally over the reviewed JSON knowledge base. Groq generates language only for the general-answer branch using the retrieved passages and safety instructions.</p>
+        <figure class="diagram">
+          <svg viewBox="0 0 900 210" role="img" aria-labelledby="chat-title chat-desc">
+            <title id="chat-title">Vitalis AI chatbot flow</title><desc id="chat-desc">Question is routed through local TF-IDF retrieval, then a special-case response, no-results response, or Groq generation; citations return to the UI.</desc>
+            <defs><marker id="chat-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#0f766e"/></marker>
+              <style>.cbox{fill:#fff;stroke:#b9d8d0;stroke-width:2}.cgreen{fill:#eaf5f2;stroke:#83b9ad;stroke-width:2}.corange{fill:#fff6e8;stroke:#e4bd7d;stroke-width:2}.ct{font:700 14px Inter,Arial,sans-serif;fill:#193936}.cs{font:12px Inter,Arial,sans-serif;fill:#58716d}.cl{stroke:#0f766e;stroke-width:2.2;fill:none;marker-end:url(#chat-arrow)}</style>
+            </defs>
+            <rect x="15" y="65" width="135" height="76" rx="12" class="cgreen"/><text x="82" y="96" text-anchor="middle" class="ct">Question</text><text x="82" y="119" text-anchor="middle" class="cs">chat history</text>
+            <rect x="190" y="65" width="175" height="76" rx="12" class="cbox"/><text x="277" y="96" text-anchor="middle" class="ct">chatbot_rag.py</text><text x="277" y="119" text-anchor="middle" class="cs">TF-IDF + topic filters</text>
+            <rect x="405" y="10" width="190" height="64" rx="12" class="cgreen"/><text x="500" y="37" text-anchor="middle" class="ct">Special-case answer</text><text x="500" y="57" text-anchor="middle" class="cs">blood sugar / memory</text>
+            <rect x="405" y="81" width="190" height="64" rx="12" class="cbox"/><text x="500" y="108" text-anchor="middle" class="ct">Groq generation</text><text x="500" y="128" text-anchor="middle" class="cs">retrieved context + prompt</text>
+            <rect x="405" y="152" width="190" height="48" rx="12" class="corange"/><text x="500" y="182" text-anchor="middle" class="ct">No passages → no guess</text>
+            <rect x="640" y="65" width="235" height="76" rx="12" class="cgreen"/><text x="757" y="96" text-anchor="middle" class="ct">Answer + source cards</text><text x="757" y="119" text-anchor="middle" class="cs">saved in session_state</text>
+            <path d="M150 103 H183" class="cl"/><path d="M365 95 C384 95 382 42 398 42" class="cl"/><path d="M365 103 H398" class="cl"/><path d="M365 111 C384 111 382 176 398 176" class="cl"/>
+            <path d="M595 42 C618 42 614 82 633 89" class="cl"/><path d="M595 113 H633" class="cl"/><path d="M595 176 C618 176 614 133 633 123" class="cl"/>
+          </svg>
+          <figcaption>Two targeted answer paths avoid free-form generation; unsupported questions receive an explicit “not enough reviewed information” response.</figcaption>
+        </figure>
+        <ol>
+          <li><code>build_retrieval_query()</code> adds the latest user question only when the new message looks like a follow-up.</li>
+          <li><code>retrieve_passages()</code> loads the local index once, filters topic mismatches, and returns passages with source IDs.</li>
+          <li>High-blood-sugar action questions use <code>build_high_blood_sugar_guidance()</code>; memory-loss concern questions use <code>build_memory_loss_information()</code>.</li>
+          <li>No relevant passages means the app declines to guess. Otherwise, context and chat history are passed through <code>stream_groq_response()</code>.</li>
+          <li>The UI streams text, normalizes generated text, shows sources with links/review dates, and stores turns in <code>st.session_state.chat_messages</code>.</li>
+        </ol>
+        <div class="callout"><strong>API key.</strong> <code>get_groq_api_key()</code> checks Streamlit secrets, then the <code>GROQ_API_KEY</code> environment variable. Missing keys and request/response errors are surfaced in the UI. Messages are sent to Groq; do not enter identifying or personal health information.</div>
+      </section>
+
+      <section class="section" id="tutor">
+        <div class="section-label">06 / Learning journey</div>
+        <h2>Health Literacy Tutor: a three-step loop</h2>
+        <div class="flow" aria-label="Tutor learning flow">
+          <div class="flow-step">Pick a topic<small>one of seven supported areas</small></div><span class="arrow">→</span>
+          <div class="flow-step">Build plan<small>exactly three steps</small></div><span class="arrow">→</span>
+          <div class="flow-step">Learn + check<small>lesson and open question</small></div><span class="arrow">→</span>
+          <div class="flow-step">Feedback<small>mastery, retry, XP, streak</small></div>
+        </div>
+        <p><code>health_tutor.py</code> validates that a plan has exactly three non-empty title/objective pairs, maps lesson citations to local passages, requests an adaptive lesson, and checks answers as structured JSON. It never trusts model-generated source IDs for citations.</p>
+        <div class="grid">
+          <article class="card"><h3>Mastered</h3><p>+25 XP, streak increments, step advances, mastery count increments, and the next lesson can become slightly more challenging.</p></article>
+          <article class="card"><h3>Not mastered yet</h3><p>Supportive feedback, no points lost, streak resets, attempt number increments, and the next lesson re-explains the objective.</p></article>
+        </div>
+        <p>State includes topic, passages, plan, step index, attempt number, lesson, feedback, mastery status, XP, streak, and completion flag. It exists in the current browser session only. Topics: Alzheimer's disease and memory, diabetes, heart disease, liver disease, malaria, Parkinson's disease, and pneumonia.</p>
+      </section>
+
+      <section class="section" id="files">
+        <div class="section-label">07 / Source map</div>
+        <h2>What each Python file does</h2>
+        <ul class="filelist">
+          <li><code>app.py</code><span>Main Streamlit application: theme, navigation, all page UI, input validation/rendering, helper calls, session state, and error messages.</span></li>
+          <li><code>code/__init__.py</code><span>Makes <code>code</code> importable as a Python package.</span></li>
+          <li><code>code/DiseaseModel.py</code><span>Loads the XGBoost model, exposes symptom and disease labels, predicts/ranks labels, and reads disease descriptions and precautions.</span></li>
+          <li><code>code/disease_ranking.py</code><span>Validates top-k and class/probability alignment, orders scores, and maps class IDs to disease names.</span></li>
+          <li><code>code/helper.py</code><span>Maps selected symptom names to the feature-column order in the TSV and creates the model input array.</span></li>
+          <li><code>code/alzheimer.py</code><span>Defines MRI class names/size, constructs the DenseNet201 graph, loads weights, preprocesses an image, and returns predicted label/score.</span></li>
+          <li><code>code/chatbot_rag.py</code><span>Loads and validates JSON references, builds cached TF-IDF vectors, retrieves topic-filtered passages, and prepares contexts/citations/special-case answers.</span></li>
+          <li><code>code/groq_client.py</code><span>Central Groq HTTP client: request construction, timeout, normal and streaming completions, error handling, and text normalization.</span></li>
+          <li><code>code/health_tutor.py</code><span>Defines supported topics and prompt rules; retrieves tutor sources; creates and validates plans, lessons, and answer feedback.</span></li>
+          <li><code>code/train.py</code><span>Manual symptom model-training script: preprocess raw dataset, write cleaned feature TSV, fit/evaluate XGBoost, save artifacts.</span></li>
+        </ul>
+        <h3>Direct call graph</h3>
+        <pre><code>app.py
+├─ Symptom page
+│  ├─ helper.prepare_symptoms_array()
+│  └─ DiseaseModel.predict_top_k()
+│     └─ disease_ranking.rank_disease_probabilities()
+├─ Alzheimer page
+│  └─ alzheimer.load_alzheimer_model() / predict_alzheimer_image()
+├─ Vitalis AI
+│  ├─ chatbot_rag.retrieve_passages() / format...() / unique_sources()
+│  └─ groq_client.stream_groq_response()
+└─ Health Literacy Tutor
+   └─ health_tutor.create_learning_plan() / generate_lesson() / evaluate_answer()
+      ├─ chatbot_rag.retrieve_passages()
+      └─ groq_client.generate_groq_response()</code></pre>
+      </section>
+
+      <section class="section" id="data">
+        <div class="section-label">08 / Inputs to the system</div>
+        <h2>Data files &amp; knowledge retrieval</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>File</th><th>Contents</th><th>Used by</th></tr></thead>
+            <tbody>
+              <tr><td><code>data/dataset.csv</code></td><td>Disease target plus sparse symptom columns.</td><td><code>code/train.py</code></td></tr>
+              <tr><td><code>data/clean_dataset.tsv</code></td><td>Generated multi-hot symptom matrix plus disease label; establishes inference feature/label ordering.</td><td>Training, <code>code/helper.py</code>, <code>DiseaseModel.py</code></td></tr>
+              <tr><td><code>data/symptom_Description.csv</code></td><td>Disease label and description.</td><td>Symptom match cards.</td></tr>
+              <tr><td><code>data/symptom_precaution.csv</code></td><td>Disease label and up to four dataset-provided precaution fields.</td><td>Symptom page expander.</td></tr>
+              <tr><td><code>data/liver_dataset.csv</code></td><td>Age, sex, liver measurements, and target column.</td><td>Liver page trains a decision tree at runtime.</td></tr>
+              <tr><td><code>data/chatbot_knowledge.json</code></td><td>32 reviewed entries with ID, title, text, source name, URL, and optional review date; covers seven health topics plus HealthLens scope.</td><td>Chatbot and tutor retrieval.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>How the TF-IDF retrieval works</h3>
+        <div class="timeline">
+          <article><span class="num">1</span><p>Read and validate the JSON records; each must include ID, title, text, and source name.</p></article>
+          <article><span class="num">2</span><p>Build a cached scikit-learn TF-IDF index over title + text (English stop words, unigrams and bigrams, sublinear term frequency).</p></article>
+          <article><span class="num">3</span><p>Vectorize the question and rank passages by cosine similarity; apply minimum relevance, topic matching, special-query requirements, and source diversity.</p></article>
+          <article><span class="num">4</span><p>Return passage text and citation/source metadata. This is local lexical retrieval—not live web search.</p></article>
+        </div>
+        <div class="callout warning"><strong>Keep training artifacts aligned.</strong> The cleaned TSV determines feature columns and disease category order. When retraining, verify that TSV columns, the model’s classes, and the inference vector all refer to the same order.</div>
+      </section>
+
+      <section class="section" id="models-assets">
+        <div class="section-label">09 / Binary artifacts &amp; visuals</div>
+        <h2>Models, assets &amp; sample images</h2>
+        <h3>Saved models in <code>models/</code></h3>
+        <div class="table-wrap">
+          <table><thead><tr><th>Artifact</th><th>Consumer</th><th>Format / role</th></tr></thead>
+            <tbody>
+              <tr><td><code>xgboost_model.json</code></td><td><code>DiseaseModel</code></td><td>XGBoost model for symptom ranking.</td></tr>
+              <tr><td><code>alzheimer_model.h5</code></td><td><code>code/alzheimer.py</code></td><td>Weights loaded into the reconstructed DenseNet201 graph.</td></tr>
+              <tr><td><code>CNN_Model.h5</code></td><td>Malaria page</td><td>Keras image classifier.</td></tr>
+              <tr><td><code>pneumonia_classifiers.h5</code></td><td>Pneumonia page</td><td>Keras image classifier.</td></tr>
+              <tr><td><code>heart_disease_model.pkl</code></td><td>Heart page</td><td>Pickled classifier.</td></tr>
+              <tr><td><code>diabetes_model.sav</code></td><td>Diabetes page</td><td>Joblib-loaded classifier.</td></tr>
+              <tr><td><code>parkinsons_model.sav</code></td><td>Parkison page</td><td>Joblib-loaded classifier.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Trust boundary:</strong> pickle/joblib can execute code when loaded. Only use model files from trusted sources. The repository does not fully document training provenance for every saved artifact.</p>
+        <h3>Visual assets in <code>assets/</code></h3>
+        <ul>
+          <li><code>healthlens.png</code> — favicon and sidebar logo; <code>home_hero.png</code> — landing page.</li>
+          <li><code>symptoms_illustration.png</code> — symptom page; <code>heart_illustration.png</code>, <code>liver_illustration.png</code>, <code>diabetes_illustration.png</code>, <code>parkinsons_illustration.png</code> — measurement/voice pages.</li>
+          <li><code>malaria_illustration.png</code>, <code>pneumonia_illustration.png</code> — image pages.</li>
+          <li><code>alzheimer_illustration.svg</code> — embedded in the MRI page; <code>alzheimer_logo.svg</code> — additional logo artwork.</li>
+        </ul>
+        <p>Root-level <code>alzheimer.jpg</code>, <code>nonAlzheimer.png</code>, <code>Pneumonia.jpeg.png</code>, <code>non-Pneumonia.jpeg</code>, <code>malaria.jpg</code>, and <code>no-malaria.jpeg</code> are sample images; the active pages accept uploads rather than loading them by name.</p>
+      </section>
+
+      <section class="section" id="support-files">
+        <div class="section-label">10 / Project support</div>
+        <h2>Tests, configuration &amp; historical files</h2>
+        <div class="grid">
+          <article class="card"><h3>Tests</h3><p><code>tests/test_chatbot_rag.py</code> — retrieval, special routing, sources and context.<br><code>tests/test_groq_client.py</code> — HTTP payloads, response parsing, streaming and failures (mocked network).<br><code>tests/test_health_tutor.py</code> — topic retrieval and plan/feedback validation.<br><code>tests/test_disease_ranking.py</code> — score ordering, class mapping and invalid input checks.</p></article>
+          <article class="card"><h3>Config &amp; overview</h3><p><code>README.md</code> — tutor, key setup, privacy, and medical-use scope.<br><code>requirements.txt</code> — Streamlit, data/ML, TensorFlow/Keras, image and UI dependencies.<br><code>.streamlit/config.toml</code> — light theme colors.<br><code>.gitignore</code> — virtualenv, caches, archives, secrets.<br><code>.vscode/settings.json</code> — workspace editor settings.</p></article>
+        </div>
+        <h3>The Alzheimer's notebook</h3>
+        <p><code>augmented-alzheimer-mri-with-densenet-92-5.ipynb</code> contains 18 code cells for loading/splitting MRI data, image generators, DenseNet201 model training, evaluation, saving, prediction, accuracy/loss plots, and metrics. It is an experiment/training artifact—not part of normal app startup.</p>
+        <details>
+          <summary>What is in <code>unused/</code>?</summary>
+          <p>Historical/legacy material: an older duplicate <code>DiseaseModel.py</code>; compiled Python caches; old diabetes, Parkinson, hepatitis, lung cancer, and plant-disease datasets/models; a standalone Alzheimer script; old images and assets. Active code uses the root <code>code/</code>, <code>data/</code>, <code>assets/</code>, and <code>models/</code> directories. The listed unused files are retained history, not active imports in the checked-in app flow.</p>
+        </details>
+        <details>
+          <summary>Dependency note</summary>
+          <p><code>requirements.txt</code> pins several packages but leaves core dependencies such as NumPy, Streamlit, and TensorFlow unpinned. TensorFlow H5, pickle/joblib, and XGBoost model compatibility can depend on library versions.</p>
+        </details>
+      </section>
+
+      <section class="section" id="run">
+        <div class="section-label">11 / Use &amp; maintain</div>
+        <h2>Run it, test it, change it</h2>
+        <h3>Local run</h3>
+        <pre><code>python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app.py</code></pre>
+        <p>Run from the repository root because several paths are relative. Configure <code>GROQ_API_KEY</code> in the environment or Streamlit secrets before using the chatbot or tutor. Never commit secrets.</p>
+        <h3>Test</h3>
+        <pre><code>python -m unittest discover -s tests</code></pre>
+        <p>The existing suite focuses on the extracted retrieval, Groq client, tutor service, and ranking functions. It does not comprehensively exercise the Streamlit pages or every saved model.</p>
+        <h3>Retrain the symptom model</h3>
+        <ol>
+          <li>Review <code>data/dataset.csv</code> and the intended symptom columns.</li>
+          <li>Run <code>python code/train.py</code> from the repository root. It regenerates <code>data/clean_dataset.tsv</code> and saves the XGBoost JSON model (the script also writes a compressed joblib artifact).</li>
+          <li>Verify training feature and label order against <code>helper.py</code> and <code>DiseaseModel.py</code>.</li>
+          <li>Run tests and trace a known input through feature vector, model class, and displayed label.</li>
+        </ol>
+        <h3>Maintenance checklist</h3>
+        <ul>
+          <li>Relative paths require launching at the repository root.</li>
+          <li>Diabetes and Parkinson artifact deserialization runs at module import/rerun, even on unrelated pages.</li>
+          <li>The Liver decision tree trains inside the page script; confirm data split, feature ordering, and expected reproducibility.</li>
+          <li>Check image channel assumptions, resize/preprocessing parity, and model output meanings against training code.</li>
+          <li>Session state is temporary; the app has no user account, database, or durable tutor progress.</li>
+          <li>Make the educational/non-diagnostic boundary obvious whenever changing result language.</li>
+        </ul>
+      </section>
+
+      <section class="section" id="reference">
+        <div class="section-label">12 / Quick lookup</div>
+        <h2>End-to-end: who calls whom</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>User action</th><th>Call chain</th><th>What comes back</th></tr></thead>
+            <tbody>
+              <tr><td>Select symptoms</td><td><code>app.py → helper.py → DiseaseModel.py → disease_ranking.py</code></td><td>Top-three label matches; data CSV description/precautions.</td></tr>
+              <tr><td>Submit liver inputs</td><td><code>app.py → liver CSV → DecisionTreeClassifier.fit/predict</code></td><td>Binary model label.</td></tr>
+              <tr><td>Heart / diabetes / Parkinson</td><td><code>app.py → saved pickle/joblib model.predict</code></td><td>Binary model label.</td></tr>
+              <tr><td>Upload image</td><td><code>app.py → PIL/NumPy preprocessing → Keras model.predict</code></td><td>Thresholded image label; Alzheimer uses the helper and four classes.</td></tr>
+              <tr><td>Ask Vitalis AI</td><td><code>app.py → chatbot_rag.py → special answer OR groq_client.py → render_sources()</code></td><td>Grounded answer, citations, and source metadata.</td></tr>
+              <tr><td>Use the tutor</td><td><code>app.py → health_tutor.py → chatbot_rag.py + groq_client.py</code></td><td>Validated three-step learning loop and session-local progress.</td></tr>
+              <tr><td>Retrain symptom model</td><td><code>code/train.py + data/dataset.csv</code></td><td>Clean TSV and XGBoost model artifact.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout"><strong>The shortest mental model:</strong> <code>app.py</code> coordinates the UI; <code>code/</code> holds reusable logic; <code>data/</code> supplies structured training/reference material; <code>models/</code> holds inference artifacts; and Streamlit session state holds temporary chat/tutor progress.</div>
+        <p class="section-intro">Prepared from the checked-in repository. This is an implementation guide, not a certification of model accuracy, clinical validity, dataset quality, or privacy compliance.</p>
+      </section>
+      <footer class="footer">HealthLens-AI · Project Field Guide · Read online as HTML, <a href="PROJECT_GUIDE.pdf">open the PDF version</a>, or use “Print / Save PDF”.</footer>
+    </main>
+  </div>
+</body>
+</html>
