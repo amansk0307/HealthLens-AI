@@ -590,8 +590,8 @@ with st.sidebar:
     selected = option_menu(None,
 
                            ['HOME',
-                            'Disease Prediction',
-                            #'Heart Disease Prediction',
+                            #'Disease Prediction',
+                            'Heart Disease Prediction',
                             #'Hepatitis Mortality Predictor',
                             #'Parkinsons Prediction',
                             'Parkison Prediction',
