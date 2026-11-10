@@ -591,7 +591,7 @@ with st.sidebar:
 
                            ['HOME',
                             'Disease Prediction',
-                            'Heart Disease Prediction',
+                            #'Heart Disease Prediction',
                             #'Hepatitis Mortality Predictor',
                             #'Parkinsons Prediction',
                             'Parkison Prediction',
